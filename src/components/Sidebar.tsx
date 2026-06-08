@@ -11,7 +11,8 @@ import {
   Wallet,
   Settings,
   Sparkles,
-  HeartHandshake
+  HeartHandshake,
+  LogOut
 } from "lucide-react";
 import { User, PlanTier } from "../types";
 
@@ -20,9 +21,10 @@ interface SidebarProps {
   setActiveTab: (tab: string) => void;
   user: User;
   onUpgradeClick: () => void;
+  onLogout: () => void;
 }
 
-export default function Sidebar({ activeTab, setActiveTab, user, onUpgradeClick }: SidebarProps) {
+export default function Sidebar({ activeTab, setActiveTab, user, onUpgradeClick, onLogout }: SidebarProps) {
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "groups", label: "My Circles (Ajo)", icon: Users },
@@ -90,11 +92,20 @@ export default function Sidebar({ activeTab, setActiveTab, user, onUpgradeClick 
       {/* User Premium Status Panel */}
       <div className="p-4 border-t border-brand-cream/10 bg-black/10 relative">
         <div className="bg-brand-cream/5 rounded-xl p-3 border border-brand-cream/5 flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[11px] font-mono tracking-wider font-medium text-brand-cream/60">
-              {user.email}
-            </span>
+          <div className="flex items-center justify-between gap-1 border-b border-brand-cream/10 pb-2">
+            <div className="flex items-center gap-1.5 overflow-hidden">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+              <span className="text-[11px] font-mono tracking-wider font-medium text-brand-cream/60 truncate">
+                {user.email}
+              </span>
+            </div>
+            <button
+              onClick={onLogout}
+              title="Sign Out"
+              className="p-1 text-brand-gold hover:text-brand-cream rounded hover:bg-brand-cream/10 transition-colors cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
           </div>
 
           <div className="flex items-center justify-between">

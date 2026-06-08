@@ -19,7 +19,8 @@ import {
   Wallet,
   ShieldCheck,
   Settings,
-  HeartHandshake
+  HeartHandshake,
+  LogOut
 } from "lucide-react";
 
 // Components
@@ -31,10 +32,13 @@ import KycFlow from "./components/KycFlow";
 import WalletPanel from "./components/WalletPanel";
 import GuruCoach from "./components/GuruCoach";
 import AdminPanel from "./components/AdminPanel";
+import LandingPage from "./components/LandingPage";
 
 // Data and Types
 import { loadAppState, saveAppState, AjoAppState, INITIAL_PEOPLE } from "./utils/mockData";
 import {
+  User,
+  UserRole,
   SavingsGroup,
   GroupMember,
   Round,
@@ -55,6 +59,32 @@ import {
 
 export default function App() {
   const [state, setState] = useState<AjoAppState>(loadAppState());
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("ajovault_logged_in") === "true";
+    }
+    return false;
+  });
+
+  const handleLogin = (user: User) => {
+    setState((prev) => ({
+      ...prev,
+      user
+    }));
+    setIsLoggedIn(true);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ajovault_logged_in", "true");
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("ajovault_logged_in");
+    }
+    showToast("Successfully signed out of secure AjoVault workspace.", "info");
+  };
+
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -797,6 +827,26 @@ export default function App() {
     setShowMobileMenu(false);
   };
 
+  if (!isLoggedIn) {
+    return (
+      <>
+        {/* Toast simulated */}
+        {toast && (
+          <div className="fixed top-5 right-5 z-50 bg-[#FAF7F2] p-4 text-xs font-semibold rounded-xl shadow-2xl border border-brand-border flex items-center gap-3 animate-fade-in max-w-sm">
+            {toast.type === "success" && <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />}
+            {toast.type === "warning" && <AlertOctagon className="w-5 h-5 text-brand-clay shrink-0" />}
+            {toast.type === "info" && <Sparkles className="w-5 h-5 text-brand-gold shrink-0" />}
+            <span className="text-brand-forest">{toast.message}</span>
+          </div>
+        )}
+        <LandingPage
+          onLogin={handleLogin}
+          onShowToast={showToast}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-brand-cream overflow-hidden text-brand-ink relative flex-col lg:flex-row">
       
@@ -918,6 +968,16 @@ export default function App() {
                 >
                   UPGRADE MEMBER TIER
                 </button>
+                <button
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    handleLogout();
+                  }}
+                  className="w-full text-center py-2 bg-black/20 text-brand-cream text-[11px] font-bold rounded-lg border border-brand-cream/10 cursor-pointer block mt-2 flex items-center justify-center gap-1.5"
+                >
+                  <LogOut className="w-4 h-4 text-brand-gold" />
+                  SIGN OUT OF VAULT
+                </button>
               </div>
             </div>
           </div>
@@ -930,6 +990,7 @@ export default function App() {
         setActiveTab={handleTabSelection}
         user={state.user}
         onUpgradeClick={() => setShowUpgradeModal(true)}
+        onLogout={handleLogout}
       />
 
       {/* Mobile Bottom Navigation */}
