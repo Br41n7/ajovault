@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-clay: #C1440E;
+  --color-brand-forest: #1F4B35;
+  --color-brand-gold: #D4A017;
+  --color-brand-cream: #FAF7F2;
+  --color-brand-ink: #1A1A1A;
+  --color-brand-muted: #6B6560;
+  --color-brand-border: #E8E0D5;
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-scale-up: scale-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-up {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-brand-cream);
+  color: var(--color-brand-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-muted);
+}
+
+/* Elegant traditional fabric grid */
+.adire-grid {
+  background-image: radial-gradient(#C1440E 0.75px, transparent 0.75px), radial-gradient(#1F4B35 0.75px, #FAF7F2 0.75px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+  opacity: 0.04;
+}
+
+.adire-accent {
+  background-image: radial-gradient(var(--color-brand-clay) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
